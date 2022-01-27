@@ -1,3 +1,5 @@
+This is an example stock broker application made for playing around with micronaut
+
 ## Micronaut 3.2.7 Documentation
 
 - [User Guide](https://docs.micronaut.io/3.2.7/guide/index.html)
