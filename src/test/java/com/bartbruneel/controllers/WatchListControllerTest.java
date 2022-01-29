@@ -21,8 +21,10 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static com.bartbruneel.data.InMemoryAccountStore.ACCOUNT_ID;
 import static io.micronaut.http.HttpRequest.GET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -30,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class WatchListControllerTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(WatchListControllerTest.class);
-    private static final UUID TEST_ACCOUNT_ID = WatchListController.ACCOUNT_ID;
+    private static final UUID TEST_ACCOUNT_ID = ACCOUNT_ID;
 
     @Inject
     @Client("/account/watchlist")
@@ -53,11 +55,7 @@ public class WatchListControllerTest {
 
     @Test
     void test_returnsWatchListForTestAccount() {
-        inMemoryAccountStore.updateWatchList(TEST_ACCOUNT_ID, new WatchList(
-                Stream.of("AAPL", "GOOGL", "MFST")
-                        .map(Symbol::new)
-                        .toList()
-        ));
+        addWatchListForTestAccount();
         var response = client.toBlocking().exchange("/", JsonNode.class);
         assertEquals(HttpStatus.OK, response.getStatus());
         assertEquals(replaceLineSeparators(""" 
@@ -73,6 +71,8 @@ public class WatchListControllerTest {
                 replaceLineSeparators(response.getBody().get().toPrettyString()));
     }
 
+
+
     @Test
     void test_canUpdateWatchListForTestAccount() {
         var symbols = Stream.of("AAPL", "GOOGL", "MSFT").map(Symbol::new).toList();
@@ -81,6 +81,24 @@ public class WatchListControllerTest {
         HttpResponse<Object> response = client.toBlocking().exchange(request);
         assertEquals(HttpStatus.OK, response.getStatus());
         assertEquals(symbols, inMemoryAccountStore.getWatchList(TEST_ACCOUNT_ID).symbols());
+    }
+
+    @Test
+    void canDeleteWatchListForTestAccount() {
+        addWatchListForTestAccount();
+        assertFalse(inMemoryAccountStore.getWatchList(TEST_ACCOUNT_ID).symbols().isEmpty());
+        MutableHttpRequest<Object> request = HttpRequest.DELETE("/");
+        HttpResponse<Object> response = client.toBlocking().exchange(request);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+        assertTrue(inMemoryAccountStore.getWatchList(TEST_ACCOUNT_ID).symbols().isEmpty());
+    }
+
+    private void addWatchListForTestAccount() {
+        inMemoryAccountStore.updateWatchList(TEST_ACCOUNT_ID, new WatchList(
+                Stream.of("AAPL", "GOOGL", "MFST")
+                        .map(Symbol::new)
+                        .toList()
+        ));
     }
 
     private String replaceLineSeparators(String input) {
