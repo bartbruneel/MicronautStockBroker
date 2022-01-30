@@ -9,4 +9,25 @@ public record Wallet (
     Symbol symbol,
     BigDecimal available,
     BigDecimal locked
-) {}
+) implements RestApiResponse {
+
+    public Wallet addAvailable(BigDecimal amountToAdd) {
+        return new Wallet(
+                accountId,
+                walletId,
+                symbol,
+                available.add(amountToAdd),
+                this.locked
+        );
+    }
+
+    public Wallet withdrawAvailable(BigDecimal amountToWithdraw) {
+        return new Wallet(
+                accountId,
+                walletId,
+                symbol,
+                available.subtract(amountToWithdraw),
+                this.locked
+        );
+    }
+}
