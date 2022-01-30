@@ -8,4 +8,5 @@ public record WatchList(List<Symbol> symbols) {
     public WatchList() {
         this(new ArrayList<>());
     }
+
 }

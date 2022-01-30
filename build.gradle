@@ -27,6 +27,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
     implementation("com.github.javafaker:javafaker:1.0.2")
+    implementation("io.projectreactor:reactor-core:3.4.14")
 }
 
 
