@@ -20,6 +20,7 @@ micronaut {
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.20'
     annotationProcessor("io.micronaut:micronaut-http-validation")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
@@ -30,6 +31,9 @@ dependencies {
     implementation("io.projectreactor:reactor-core:3.4.14")
     implementation("io.swagger.core.v3:swagger-annotations:1.6.4")
     annotationProcessor("io.micronaut.openapi:micronaut-openapi:4.0.0")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation("io.micronaut.security:micronaut-security-annotations")
+    testImplementation("com.google.code.gson:gson:2.7")
 }
 
 tasks.withType(JavaCompile) {

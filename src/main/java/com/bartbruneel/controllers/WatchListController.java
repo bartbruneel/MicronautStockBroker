@@ -9,11 +9,14 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.bartbruneel.data.InMemoryAccountStore.ACCOUNT_ID;
 
+@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/account/watchlist")
 public record WatchListController(InMemoryAccountStore store) {
 

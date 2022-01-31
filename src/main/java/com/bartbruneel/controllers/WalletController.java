@@ -14,6 +14,8 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.security.annotation.Secured;
+import io.micronaut.security.rules.SecurityRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import java.util.List;
 
 import static com.bartbruneel.data.InMemoryAccountStore.ACCOUNT_ID;
 
+@Secured(SecurityRule.IS_ANONYMOUS)
 @Controller("/account/wallets")
 public record WalletController(InMemoryAccountStore store) {
 
