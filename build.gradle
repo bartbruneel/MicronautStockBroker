@@ -28,6 +28,13 @@ dependencies {
     implementation("io.micronaut:micronaut-validation")
     implementation("com.github.javafaker:javafaker:1.0.2")
     implementation("io.projectreactor:reactor-core:3.4.14")
+    implementation("io.swagger.core.v3:swagger-annotations:1.6.4")
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi:4.0.0")
+}
+
+tasks.withType(JavaCompile) {
+    options.fork = true
+    options.forkOptions.jvmArgs << '-Dmicronaut.openapi.views.spec=rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop'
 }
 
 
