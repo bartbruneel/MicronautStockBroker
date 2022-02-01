@@ -3,9 +3,14 @@ package com.bartbruneel.controllers;
 import com.bartbruneel.data.InMemoryAccountStore;
 import com.bartbruneel.models.Symbol;
 import com.bartbruneel.models.WatchList;
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
+import io.micronaut.http.MutableHttpResponse;
+import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Put;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.micronaut.security.annotation.Secured;
@@ -18,11 +23,12 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 import static com.bartbruneel.data.InMemoryAccountStore.ACCOUNT_ID;
 
-@Secured(SecurityRule.IS_ANONYMOUS)
+@Secured(SecurityRule.IS_AUTHENTICATED)
 @Controller("/account/watchlist-reactive")
 public class WatchListReactiveController {
 
@@ -38,9 +44,9 @@ public class WatchListReactiveController {
 
     @Get(produces = MediaType.APPLICATION_JSON)
     @ExecuteOn(TaskExecutors.IO)
-    public WatchList get() {
+    public Mono<WatchList> get() {
         LOG.debug("getWatchList - {}", Thread.currentThread().getName());
-        return store.getWatchList(ACCOUNT_ID);
+        return Mono.fromCallable(() -> store.getWatchList(ACCOUNT_ID));
     };
 
     @Get(
@@ -55,5 +61,23 @@ public class WatchListReactiveController {
                 .flatMapMany(Flux::fromIterable)
                 .map(Symbol::value);
     };
+
+    @Put(
+            consumes = MediaType.APPLICATION_JSON,
+            produces = MediaType.APPLICATION_JSON
+    )
+    public Mono<WatchList> update(@Body WatchList watchList) {
+        return Mono.fromCallable(() -> store.updateWatchList(ACCOUNT_ID, watchList));
+    }
+
+    @Delete(value = "/{uuid}",
+            produces = MediaType.APPLICATION_JSON
+
+    )
+    public Mono<MutableHttpResponse<Object>> delete(final UUID uuid) {
+        store.deleteWatchListReactive(uuid);
+        return Mono.fromCallable(HttpResponse::noContent);
+    }
+
 
 }

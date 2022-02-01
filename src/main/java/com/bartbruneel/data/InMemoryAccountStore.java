@@ -37,6 +37,10 @@ public class InMemoryAccountStore {
         watchListsPerAccount.remove(accountId);
     }
 
+    public Void deleteWatchListReactive(final UUID accountId) {
+        watchListsPerAccount.remove(accountId);
+        return null;
+    }
 
     public Wallet depositToWallet(DepositFiatMoney deposit) {
         Map<UUID, Wallet> wallets = getWalletsMap(deposit.accountId());
