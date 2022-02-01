@@ -54,7 +54,7 @@ public class WatchListControllerReactiveTest {
     }
 
     private BearerAccessRefreshToken loginUser() {
-        return client.login(new UsernamePasswordCredentials("my-user", "secret"));
+        return client.login(new UsernamePasswordCredentials("my-user@bart.com", "secret"));
     }
 
     @Test

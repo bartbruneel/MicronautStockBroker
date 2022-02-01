@@ -20,7 +20,8 @@ micronaut {
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.20'
+    implementation('org.projectlombok:lombok:1.18.20')
+    annotationProcessor("org.projectlombok:lombok:1.18.20")
     annotationProcessor("io.micronaut:micronaut-http-validation")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-runtime")
@@ -34,6 +35,10 @@ dependencies {
     implementation("io.micronaut.security:micronaut-security-jwt")
     implementation("io.micronaut.security:micronaut-security-annotations")
     testImplementation("com.google.code.gson:gson:2.7")
+    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
+    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
+    annotationProcessor("io.micronaut.data:micronaut-data-processor")
+    runtimeOnly("com.h2database:h2")
 }
 
 tasks.withType(JavaCompile) {

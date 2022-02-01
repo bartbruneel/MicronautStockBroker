@@ -127,13 +127,13 @@ public class WatchListControllerTest {
     }
 
     private String loginUser() {
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("my-user", "secret");
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials("my-user@bart.com", "secret");
         var login = HttpRequest.POST("/login", credentials);
         HttpResponse<BearerAccessRefreshToken> response = client.toBlocking().exchange(login, BearerAccessRefreshToken.class);
         assertEquals(HttpStatus.OK, response.getStatus());
         BearerAccessRefreshToken body = response.body();
         assertNotNull(body);
-        assertEquals("my-user", body.getUsername());
+        assertEquals("my-user@bart.com", body.getUsername());
         LOG.debug("Login Bearer Token: {} expires in {}", body.getAccessToken(), body.getExpiresIn());
         return body.getAccessToken();
     }
