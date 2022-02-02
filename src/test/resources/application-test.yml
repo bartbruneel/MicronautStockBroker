@@ -25,7 +25,7 @@ datasources:
 jpa.default.properties.hibernate.hbm2ddl.auto: update
 hello:
   world:
-    message: Hello from application.yml
+    message: Hello from application-test.yml
     translation:
       de: "Hallo Welt"
       en: "Hello World"

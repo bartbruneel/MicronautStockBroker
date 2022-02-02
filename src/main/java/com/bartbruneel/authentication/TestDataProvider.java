@@ -4,8 +4,6 @@ import com.bartbruneel.entities.SymbolEntity;
 import com.bartbruneel.entities.UserEntity;
 import com.bartbruneel.repositories.SymbolsRepository;
 import com.bartbruneel.repositories.UserRepository;
-import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.env.Environment;
 import io.micronaut.context.event.StartupEvent;
 import io.micronaut.runtime.event.annotation.EventListener;
 import jakarta.inject.Singleton;
@@ -15,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.stream.Stream;
 
 @Singleton
-@Requires(notEnv = Environment.TEST)
+//@Requires(notEnv = Environment.TEST)
 public class TestDataProvider {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestDataProvider.class);
