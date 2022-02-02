@@ -1,7 +1,9 @@
 package com.bartbruneel.controllers;
 
 import com.bartbruneel.data.InMemoryStore;
+import com.bartbruneel.entities.SymbolEntity;
 import com.bartbruneel.models.Symbol;
+import com.bartbruneel.repositories.SymbolsRepository;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -24,9 +26,22 @@ public class SymbolsController {
     public static final int DEFAULT_MAX = 10;
     public static final int DEFAULT_OFFSET = 0;
     private final InMemoryStore inMemoryStore;
+    private final SymbolsRepository symbolsRepository;
 
-    public SymbolsController(InMemoryStore inMemoryStore) {
+    public SymbolsController(InMemoryStore inMemoryStore, SymbolsRepository symbolsRepository) {
         this.inMemoryStore = inMemoryStore;
+        this.symbolsRepository = symbolsRepository;
+    }
+
+
+    @Operation(summary = "Returns all available symbols from database using JPA")
+    @ApiResponse(
+            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+    )
+    @Tag(name = "symbols")
+    @Get("/jpa")
+    public List<SymbolEntity> getAllJpa() {
+        return symbolsRepository.findAll();
     }
 
 

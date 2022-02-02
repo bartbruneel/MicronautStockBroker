@@ -39,6 +39,8 @@ dependencies {
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     runtimeOnly("com.h2database:h2")
+    implementation("io.micronaut.flyway:micronaut-flyway")
+    implementation("org.postgresql:postgresql")
 }
 
 tasks.withType(JavaCompile) {
