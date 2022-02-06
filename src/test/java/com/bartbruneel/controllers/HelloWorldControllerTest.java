@@ -1,7 +1,5 @@
 package com.bartbruneel.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
@@ -10,7 +8,12 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @MicronautTest
 class HelloWorldControllerTest {
@@ -42,18 +45,13 @@ class HelloWorldControllerTest {
     @Test
     void helloFromTranslationEndpointEndpointReturnsContentFromConfigFile() {
         var response = client.toBlocking().exchange("/hello/translation", JsonNode.class);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String prettyJsonString = gson.toJson(response.getBody().get());
-        assertEquals("{\n" +
-                "  \"values\": {\n" +
-                "    \"de\": {\n" +
-                "      \"value\": \"Hallo Welt\"\n" +
-                "    },\n" +
-                "    \"en\": {\n" +
-                "      \"value\": \"Hello World\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}", prettyJsonString);
+        JsonNode jsonNode = response.getBody().get();
+        List<String> expected = Arrays.asList("Hello World", "Hallo Welt");
+        List<String> actual = new ArrayList<>();
+        jsonNode.values().forEach(n -> actual.add(n.getStringValue()));
+        assertEquals(actual.size(), expected.size());
+        assertTrue(actual.containsAll(expected));
+        assertTrue(expected.containsAll(actual));
         assertEquals(HttpStatus.OK, response.getStatus());
     }
 
