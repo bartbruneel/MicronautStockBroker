@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 @KafkaListener(
     clientId = "mn-pricing-external-quote-consumer",
     groupId = "external-quote-consumer",
-    batch = true
+    batch = true,
 )
 class ExternalQuoteConsumer(val producer: PriceUpdateProducer) {
 

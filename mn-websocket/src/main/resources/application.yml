@@ -1,0 +1,9 @@
+micronaut:
+  application:
+    name: mnWebsocket
+  server:
+    port: 8180
+netty:
+  default:
+    allocator:
+      max-order: 3
