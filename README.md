@@ -1,0 +1,1 @@
+A repository made for playing around with micronaut. Instructions for start-up can be found in separate modules.
