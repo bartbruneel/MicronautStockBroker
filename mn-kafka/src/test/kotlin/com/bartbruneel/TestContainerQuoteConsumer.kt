@@ -1,8 +1,6 @@
 package com.bartbruneel
 
-import io.micronaut.configuration.kafka.annotation.KafkaListener
-import io.micronaut.configuration.kafka.annotation.OffsetReset
-import io.micronaut.configuration.kafka.annotation.Topic
+import io.micronaut.configuration.kafka.annotation.*
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
@@ -25,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TestContainerQuoteProducer {
+class TestContainerQuoteConsumer {
 
     val LOG = LoggerFactory.getLogger(this.javaClass)
 
@@ -54,18 +52,19 @@ class TestContainerQuoteProducer {
     }
 
     @Test
-    fun test_producingRecordsWorks() {
-        val producer = context.getBean(ExternalQuoteProducer::class.java)
-        repeat(10) {
-            producer.send(
-                "TEST", ExternalQuote(
-                    "TEST",
-                    randomValue(), randomValue()
-                )
-            )
+    fun test_consumingPriceUpdatesWorks() {
+        val observer = context.getBean(PriceUpdateObserver::class.java)
+        val testProducer = context.getBean(TestScopedExternalQuoteProducer::class.java)
+        repeat(4) {
+            testProducer.send(ExternalQuote(
+                "TEST $it",
+            randomValue(),
+            randomValue()))
         }
-        val observer = context.getBean(ExternalQuoteObserver::class.java)
-        Awaitility.await().untilAsserted{ assertEquals(10, observer.inspected.size) }
+        Awaitility.await().untilAsserted {
+            assertEquals(4, observer.inspected.size)
+        }
+
     }
 
     private fun randomValue(): BigDecimal = BigDecimal.valueOf(ThreadLocalRandom.current().nextDouble(0.0, 1000.0))
@@ -75,19 +74,27 @@ class TestContainerQuoteProducer {
 
 @Singleton
 @Requires(env = [Environment.TEST])
-class ExternalQuoteObserver {
+class PriceUpdateObserver {
 
     val LOG = LoggerFactory.getLogger(this.javaClass)
 
-    val inspected = mutableListOf<ExternalQuote>()
+    val inspected = mutableListOf<PriceUpdate>()
 
     @KafkaListener(
         offsetReset = OffsetReset.EARLIEST
     )
-    @Topic("external-quotes")
-    fun receive(externalQuote: ExternalQuote) {
-        LOG.debug("Consumed {}", externalQuote)
-        inspected.add(externalQuote)
+    @Topic("price_update")
+    fun receive(priceUpdates: List<PriceUpdate>) {
+        LOG.debug("Consumed {}", priceUpdates)
+        inspected.addAll(priceUpdates)
     }
 
+}
+
+@KafkaClient
+@Requires(env = [Environment.TEST])
+interface TestScopedExternalQuoteProducer {
+
+    @Topic("external-quotes")
+    fun send(externalQuote: ExternalQuote)
 }

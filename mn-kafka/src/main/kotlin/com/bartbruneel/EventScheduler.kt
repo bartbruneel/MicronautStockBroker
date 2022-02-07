@@ -1,11 +1,14 @@
 package com.bartbruneel
 
+import io.micronaut.context.annotation.Requires
+import io.micronaut.context.env.Environment
 import io.micronaut.scheduling.annotation.Scheduled
 import jakarta.inject.Singleton
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
 import java.util.concurrent.ThreadLocalRandom
 
+@Requires(notEnv = [Environment.TEST])
 @Singleton
 class EventScheduler(val producer: ExternalQuoteProducer) {
 
