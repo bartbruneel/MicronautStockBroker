@@ -1,0 +1,21 @@
+micronaut:
+  application:
+    name: mnJdbc
+datasources:
+  default:
+    url: jdbc:mysql://localhost:3306/mn-jdbc
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    schema-generate: NONE
+    dialect: MYSQL
+netty:
+  default:
+    allocator:
+      max-order: 3
+liquibase:
+  datasources:
+    default:
+      enabled: true
+      change-log: 'classpath:db/liquibase-changelog.xml'
+      drop-first: false

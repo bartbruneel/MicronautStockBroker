@@ -1,0 +1,22 @@
+micronaut:
+  application:
+    name: mnQuickstart
+  server:
+    port: ${SERVER_PORT:8081}
+hello:
+  world:
+    message: "Hello from application.yml"
+    translation:
+      de: "Hallo Welt"
+      en: "Hello World"
+jackson:
+  # property-naming-strategy: SNAKE_CASE
+  serialization:
+    writeDatesAsTimestamps: false
+    writeDatesWithZoneId: true
+    writeDateTimestampsAsNanoSeconds: false
+  generator:
+    writeNumbersAsStrings: false
+    writeBigDecimalAsPlain: false
+  deserialization:
+    failOnUnknownProperties: false
