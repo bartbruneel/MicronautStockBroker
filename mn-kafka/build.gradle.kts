@@ -19,6 +19,8 @@ repositories {
 
 dependencies {
     kapt("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut:micronaut-graal")
+    compileOnly("org.graalvm.nativeimage:svm")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut:micronaut-runtime")
