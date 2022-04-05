@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: mnRateLimit
+netty:
+  default:
+    allocator:
+      max-order: 3
+redis:
+  uri: redis://localhost
+  ssl: false
+  timeout: 30s
